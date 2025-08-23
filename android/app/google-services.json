@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "43842193930",
+    "firebase_url": "https://silver-support-default-rtdb.firebaseio.com",
+    "project_id": "silver-support",
+    "storage_bucket": "silver-support.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:43842193930:android:f06bc1a61661ebb5632df3",
+        "android_client_info": {
+          "package_name": "com.kabirtiwari.silver_support"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAN1amtU8U_WZ7ETz24-oWMvQxAWhCCOD0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

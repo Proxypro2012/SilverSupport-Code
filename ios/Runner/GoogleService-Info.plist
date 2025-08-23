@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDPPJu25xjH2sHasoheHVfZEwtB8TKUk1Q</string>
+	<key>GCM_SENDER_ID</key>
+	<string>43842193930</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.KabirTiwari.silversupportnew</string>
+	<key>PROJECT_ID</key>
+	<string>silver-support</string>
+	<key>STORAGE_BUCKET</key>
+	<string>silver-support.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:43842193930:ios:e6fdd77bd8da248d632df3</string>
+	<key>DATABASE_URL</key>
+	<string>https://silver-support-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
