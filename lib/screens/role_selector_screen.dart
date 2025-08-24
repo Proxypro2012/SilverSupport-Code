@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RoleSelectorScreen extends StatelessWidget {
   const RoleSelectorScreen({super.key});
@@ -80,6 +81,27 @@ class RoleSelectorScreen extends StatelessWidget {
                       ),
                       onPressed: () => context.go("/student/login"),
                       child: const Text("I'm a Student"),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xfff2f2f2),
+                        foregroundColor: Colors.black87,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          side: const BorderSide(color: Colors.black12),
+                        ),
+                      ),
+                      onPressed: () async {
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setBool('seenOnboarding', false);
+                        if (!context.mounted) return;
+                        context.go("/onboarding");
+                      },
+                      child: const Text("View Onboarding Again"),
                     ),
                   ),
                 ],

@@ -11,6 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_launcher_icons: ^0.13.1
+
   # UI
   cupertino_icons: ^1.0.8
   flutter_local_notifications: 19.4.0
@@ -25,8 +27,10 @@ dependencies:
   firebase_database: ^11.3.10
   firebase_messaging: ^15.0.0
   go_router: ^6.5.0
-  rxdart: ^0.27.7   # ✅ add this
-
+  rxdart: ^0.27.7
+  shared_preferences: ^2.5.3
+  flutter_svg: 
+  wave: ^0.2.0
 
   # Optional (for future Face ID/biometrics support)
   local_auth: ^2.1.8
@@ -39,12 +43,16 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # Assets or images (uncomment if you add any)
-  # assets:
-  #   - assets/images/
+  assets:
+    - assets/silversupport-icon.png
+    - assets/onboarding-1.png
+    - assets/onboarding-2.png
+    - assets/onboarding-3.png
 
-  # Fonts (uncomment and add your own if needed)
-  # fonts:
-  #   - family: CustomFont
-  #     fonts:
-  #       - asset: fonts/CustomFont-Regular.ttf
+
+flutter_launcher_icons:
+  image_path: "assets/silversupport-icon.png"
+  android: true
+  ios: true
+  windows:
+    generate: true

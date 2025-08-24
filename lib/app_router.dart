@@ -1,4 +1,3 @@
-// lib/app_router.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -13,6 +12,7 @@ import 'screens/student/student_signup_screen.dart';
 import 'screens/dashboards/senior_dashboard.dart';
 import 'screens/dashboards/student_dashboard.dart';
 import 'screens/email_verification_required_screen.dart';
+import 'onboarding/onbording.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -41,7 +41,7 @@ FutureOr<String?> _redirectGuard(
   }
 
   // 3. Logged in + verified
-  if (loggedIn && user!.emailVerified) {
+  if (loggedIn && user.emailVerified) {
     if (loggingIn || state.location == "/") {
       try {
         final seniorDoc = await _firestore
@@ -57,11 +57,9 @@ FutureOr<String?> _redirectGuard(
         if (studentDoc.exists) return "/dashboard/student";
       } catch (e) {
         debugPrint("⚠️ Firestore check failed in redirect: $e");
-        // let them continue instead of crashing
         return null;
       }
 
-      // User exists in neither collection → force logout
       await _auth.signOut();
       return "/";
     }
@@ -87,11 +85,15 @@ class GoRouterRefreshStream extends ChangeNotifier {
 
 /// Central app router
 class AppRouter {
-  static final GoRouter router = GoRouter(
-    initialLocation: "/",
+  static GoRouter router(bool seenOnboarding) => GoRouter(
+    initialLocation: seenOnboarding ? "/" : "/onboarding",
     refreshListenable: GoRouterRefreshStream(_auth.authStateChanges()),
     redirect: (context, state) async => await _redirectGuard(context, state),
     routes: [
+      GoRoute(
+        path: "/onboarding",
+        builder: (context, state) => const Onbording(),
+      ),
       GoRoute(
         path: "/",
         builder: (context, state) => const RoleSelectorScreen(),
