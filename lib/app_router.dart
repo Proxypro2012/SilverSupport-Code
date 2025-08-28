@@ -14,6 +14,13 @@ import 'screens/dashboards/student_dashboard.dart';
 import 'screens/email_verification_required_screen.dart';
 import 'onboarding/onbording.dart';
 
+import 'authentication-flow/role_selector_page.dart';
+import 'authentication-flow/senior_login_page.dart';
+import 'authentication-flow/student_login_page.dart';
+import 'authentication-flow/senior_signup_page.dart';
+import 'authentication-flow/student_signup_page.dart';
+import 'authentication-flow/onboarding_wrapper.dart';
+
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -33,7 +40,7 @@ FutureOr<String?> _redirectGuard(
   }
 
   // 2. Logged in but email not verified → force verify screen
-  if (loggedIn && !user!.emailVerified) {
+  if (loggedIn && !user.emailVerified) {
     if (state.location != "/verify-email") {
       return "/verify-email";
     }
@@ -90,10 +97,13 @@ class AppRouter {
     refreshListenable: GoRouterRefreshStream(_auth.authStateChanges()),
     redirect: (context, state) async => await _redirectGuard(context, state),
     routes: [
+      // Original onboarding flow
       GoRoute(
         path: "/onboarding",
         builder: (context, state) => const Onbording(),
       ),
+
+      // Original screens
       GoRoute(
         path: "/",
         builder: (context, state) => const RoleSelectorScreen(),
@@ -125,6 +135,32 @@ class AppRouter {
       GoRoute(
         path: "/dashboard/student",
         builder: (context, state) => const StudentDashboard(),
+      ),
+
+      // New onboarding-style authentication flow
+      GoRoute(
+        path: "/onboarding/role",
+        builder: (context, state) => RoleSelectorPage(),
+      ),
+      GoRoute(
+        path: "/onboarding/senior-login",
+        builder: (context, state) => const SeniorLoginPage(),
+      ),
+      GoRoute(
+        path: "/onboarding/student-login",
+        builder: (context, state) => const StudentLoginPage(),
+      ),
+      GoRoute(
+        path: "/onboarding/senior-signup",
+        builder: (context, state) => const SeniorSignupPage(),
+      ),
+      GoRoute(
+        path: "/onboarding/student-signup",
+        builder: (context, state) => const StudentSignupPage(),
+      ),
+      GoRoute(
+        path: "/onboarding/flow",
+        builder: (context, state) => const OnboardingWrapper(),
       ),
     ],
   );

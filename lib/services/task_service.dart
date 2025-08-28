@@ -111,8 +111,12 @@ class TaskService {
       assignedStream,
       (pendingList, assignedList) {
         final map = <String, Task>{};
-        for (final t in pendingList) map[t.id] = t;
-        for (final t in assignedList) map[t.id] = t;
+        for (final t in pendingList) {
+          map[t.id] = t;
+        }
+        for (final t in assignedList) {
+          map[t.id] = t;
+        }
 
         final merged = map.values.toList()
           ..sort((a, b) => (b.timestamp ?? 0).compareTo(a.timestamp ?? 0));

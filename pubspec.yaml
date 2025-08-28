@@ -48,6 +48,7 @@ flutter:
     - assets/onboarding-1.png
     - assets/onboarding-2.png
     - assets/onboarding-3.png
+    - assets/bg.png
 
 
 flutter_launcher_icons:

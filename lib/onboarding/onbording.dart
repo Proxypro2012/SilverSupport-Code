@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'content_model.dart';
 
 class Onbording extends StatefulWidget {
-  const Onbording({Key? key}) : super(key: key);
+  const Onbording({super.key});
 
   @override
   OnbordingState createState() => OnbordingState();
@@ -56,6 +56,7 @@ class OnbordingState extends State<Onbording> {
                         const SizedBox(height: 30),
                         Text(
                           contents[i].title,
+                          textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
@@ -106,7 +107,7 @@ class OnbordingState extends State<Onbording> {
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.setBool('seenOnboarding', true);
                   if (!mounted) return;
-                  context.go("/"); // Navigate to RoleSelectorScreen
+                  context.go("/onboarding/flow"); // ✅ Updated navigation
                 } else {
                   _controller.nextPage(
                     duration: const Duration(milliseconds: 300),
