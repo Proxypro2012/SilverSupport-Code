@@ -49,10 +49,11 @@ flutter:
     - assets/onboarding-2.png
     - assets/onboarding-3.png
     - assets/bg.png
+    - assets/icon.png
 
 
 flutter_launcher_icons:
-  image_path: "assets/silversupport-icon.png"
+  image_path: "assets/icon.png"
   android: true
   ios: true
   windows:
