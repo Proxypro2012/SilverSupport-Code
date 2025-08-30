@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter/services.dart'; // 👈 Required for haptic feedback
 import 'content_model.dart';
 
 class Onbording extends StatefulWidget {
@@ -13,11 +15,50 @@ class Onbording extends StatefulWidget {
 class OnbordingState extends State<Onbording> {
   int currentIndex = 0;
   late final PageController _controller;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
     super.initState();
     _controller = PageController(initialPage: 0);
+    _initializeLocalNotifications();
+  }
+
+  void _initializeLocalNotifications() {
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
+    const iosSettings = DarwinInitializationSettings();
+    const initSettings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
+    );
+    flutterLocalNotificationsPlugin.initialize(initSettings);
+  }
+
+  void showWelcomeNotification() {
+    const androidDetails = AndroidNotificationDetails(
+      'welcome_channel',
+      'Welcome Notifications',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false,
+    );
+
+    const iOSDetails = DarwinNotificationDetails();
+
+    const platformDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: iOSDetails,
+    );
+
+    flutterLocalNotificationsPlugin.show(
+      0,
+      'Welcome to Silver Support!',
+      'We’re so glad you’re here.',
+      platformDetails,
+    );
   }
 
   @override
@@ -32,7 +73,6 @@ class OnbordingState extends State<Onbording> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // Onboarding Pages
           Expanded(
             child: PageView.builder(
               controller: _controller,
@@ -79,8 +119,6 @@ class OnbordingState extends State<Onbording> {
               },
             ),
           ),
-
-          // Dot Indicators
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
@@ -88,8 +126,6 @@ class OnbordingState extends State<Onbording> {
               (index) => buildDot(index, context),
             ),
           ),
-
-          // Navigation Button
           Container(
             height: 60,
             width: double.infinity,
@@ -104,11 +140,18 @@ class OnbordingState extends State<Onbording> {
               ),
               onPressed: () async {
                 if (currentIndex == contents.length - 1) {
+                  HapticFeedback.heavyImpact(); // 💥 Strong feedback for final tap
+
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.setBool('seenOnboarding', true);
+
+                  showWelcomeNotification(); // 🎉 Trigger the local notification
+
                   if (!mounted) return;
-                  context.go("/onboarding/flow"); // ✅ Updated navigation
+                  context.go("/onboarding/flow");
                 } else {
+                  HapticFeedback.heavyImpact(); // ✨ Subtle feedback for next
+
                   _controller.nextPage(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
