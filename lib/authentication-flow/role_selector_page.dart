@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'onboard_content.dart';
+import 'package:flutter/services.dart'; // 👈 Required for haptic feedback
 
 class RoleSelectorPage extends StatefulWidget {
   const RoleSelectorPage({super.key});

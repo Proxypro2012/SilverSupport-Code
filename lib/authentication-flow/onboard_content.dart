@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'landing_content.dart';
 import 'role_selector_page.dart';
@@ -67,28 +68,52 @@ class OnboardContentState extends State<OnboardContent> {
   }
 
   void handleButtonTap() {
+    if (_currentPage == 1 && selectedRole == null) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text("Select a Role"),
+          content: const Text(
+            "Please choose 'Senior' or 'Student' to continue.",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("OK"),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    if ([2, 3, 4, 5].contains(_currentPage)) {
+      goToPage(1);
+      return;
+    }
+
     switch (_currentPage) {
       case 0:
-        nextPage(); // → Role Selector
+        nextPage();
         break;
       case 1:
         if (selectedRole == "senior") {
           goToPage(2);
-        } else if (selectedRole == "student") {
+        } else {
           goToPage(3);
         }
         break;
       case 2:
-        goToPage(4); // Senior → Signup
+        goToPage(4);
         break;
       case 3:
-        goToPage(5); // Student → Signup
+        goToPage(5);
         break;
       case 4:
-        goToPage(2); // Senior → Login
+        goToPage(2);
         break;
       case 5:
-        goToPage(3); // Student → Login
+        goToPage(3);
         break;
       default:
         nextPage();
@@ -105,7 +130,14 @@ class OnboardContentState extends State<OnboardContent> {
       _baseHeight,
       _maxHeight,
     );
-    final double buttonWidth = 140 + progress * 80;
+
+    // ←——— HERE: match senior-login’s 32px side padding (screenWidth - 64)
+    final double maxButtonWidth = MediaQuery.of(context).size.width - 64;
+    final double buttonWidth = (180 + progress * 80).clamp(180, maxButtonWidth);
+
+    final bool isBackButton = [2, 3, 4, 5].contains(_currentPage);
+    final String buttonLabel = isBackButton ? "Back" : "Continue";
+    final double rotationTurns = isBackButton ? 0.5 : 0.0;
 
     return Container(
       decoration: const BoxDecoration(
@@ -130,14 +162,19 @@ class OnboardContentState extends State<OnboardContent> {
               children: [
                 const SizedBox(height: 16),
                 Expanded(
-                  child: PageView(
+                  child: PageView.builder(
                     controller: _pageController,
-                    physics: const BouncingScrollPhysics(),
-                    children: _pages,
+                    physics: _currentPage == 1 && selectedRole == null
+                        ? const NeverScrollableScrollPhysics()
+                        : const BouncingScrollPhysics(),
+                    itemCount: _pages.length,
+                    itemBuilder: (_, index) => _pages[index],
                   ),
                 ),
               ],
             ),
+
+            // ←——— button at bottom
             Positioned(
               bottom: 24,
               left: 0,
@@ -155,12 +192,9 @@ class OnboardContentState extends State<OnboardContent> {
                         begin: Alignment.bottomLeft,
                         end: Alignment.topRight,
                         stops: [0.4, 0.8],
-                        colors: [
-                          Color.fromARGB(255, 239, 104, 80),
-                          Color.fromARGB(255, 139, 33, 146),
-                        ],
+                        colors: [Color(0xFFEF6850), Color(0xFF8B2192)],
                       ),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black26,
                           blurRadius: 6,
@@ -168,28 +202,43 @@ class OnboardContentState extends State<OnboardContent> {
                         ),
                       ],
                     ),
-                    child: DefaultTextStyle(
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Continue",
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: false,
+
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        // center label
+                        Center(
+                          child: Text(
+                            buttonLabel,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          const Icon(Icons.chevron_right, color: Colors.white),
-                        ],
-                      ),
+                        ),
+
+                        // sliding + rotating arrow
+                        AnimatedAlign(
+                          alignment: isBackButton
+                              ? Alignment.centerLeft
+                              : Alignment.centerRight,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          child: AnimatedRotation(
+                            turns: rotationTurns,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Icon(
+                                Icons.chevron_right,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
