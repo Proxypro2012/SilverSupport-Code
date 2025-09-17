@@ -15,7 +15,7 @@ List<UnbordingContent> contents = [
     image: 'assets/onboarding-1.png',
     title: 'Welcome to Silver Support',
     discription:
-        'Connecting students with seniors for meaningful community support.',
+        'Connecting students with seniors for meaningful community support',
   ),
   UnbordingContent(
     image: 'assets/onboarding-2.png',
@@ -27,6 +27,6 @@ List<UnbordingContent> contents = [
     image: 'assets/onboarding-3.png',
     title: 'Volunteer Opportunities',
     discription:
-        'Students can find local volunteering opportunities to help seniors in need, and in turn be awarded volunteer hours.',
+        'Students can find local volunteering opportunities to help seniors in need, and in turn be awarded volunteer hours',
   ),
 ];

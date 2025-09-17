@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/task.dart';
 
 class TaskCapsule extends StatefulWidget {
@@ -31,6 +32,49 @@ class TaskCapsule extends StatefulWidget {
 
 class _TaskCapsuleState extends State<TaskCapsule> {
   bool _expanded = false;
+
+  String? _createdByName;
+  String? _assignedToName;
+  String? _pendingApplicantName;
+
+  @override
+  void didUpdateWidget(covariant TaskCapsule oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.task.createdBy != oldWidget.task.createdBy ||
+        widget.task.assignedTo != oldWidget.task.assignedTo ||
+        widget.task.pendingApplicant != oldWidget.task.pendingApplicant) {
+      _fetchNames();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchNames();
+  }
+
+  Future<void> _fetchNames() async {
+    final firestore = FirebaseFirestore.instance;
+    Future<String?> getName(String? uid, String collection) async {
+      if (uid == null || uid.isEmpty) return null;
+      final doc = await firestore.collection(collection).doc(uid).get();
+      final data = doc.data();
+      if (data != null && data['name'] != null && data['name'].toString().trim().isNotEmpty) {
+        return data['name'];
+      }
+      return null;
+    }
+    final createdByName = await getName(widget.task.createdBy, 'seniors');
+    final assignedToName = await getName(widget.task.assignedTo, 'students');
+    final pendingApplicantName = await getName(widget.task.pendingApplicant, 'students');
+    if (mounted) {
+      setState(() {
+        _createdByName = createdByName;
+        _assignedToName = assignedToName;
+        _pendingApplicantName = pendingApplicantName;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -177,9 +221,9 @@ class _TaskCapsuleState extends State<TaskCapsule> {
                       spacing: 10,
                       runSpacing: 8,
                       children: [
-                        _metaChip('Created by', t.createdBy),
-                        _metaChip('Assigned to', t.assignedTo ?? '—'),
-                        _metaChip('Pending', t.pendingApplicant ?? '—'),
+                        _metaChip('Created by', _createdByName ?? t.createdBy),
+                        _metaChip('Assigned to', _assignedToName ?? (t.assignedTo ?? '—')),
+                        _metaChip('Pending', _pendingApplicantName ?? (t.pendingApplicant ?? '—')),
                       ],
                     ),
                     const SizedBox(height: 12),

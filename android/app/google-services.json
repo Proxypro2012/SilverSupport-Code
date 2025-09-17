@@ -13,7 +13,20 @@
           "package_name": "com.kabirtiwari.silver_support"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "43842193930-ei20r532p4bqtuv1smhnq55h2n7u6mjf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kabirtiwari.silver_support",
+            "certificate_hash": "5e209f0fc9ddd4d1c8996582179f1705d11ace1c"
+          }
+        },
+        {
+          "client_id": "43842193930-sc31hrodk1ot7qfbusgnklhkgp2nm33k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAN1amtU8U_WZ7ETz24-oWMvQxAWhCCOD0"
@@ -21,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "43842193930-sc31hrodk1ot7qfbusgnklhkgp2nm33k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "43842193930-gibkh9qfnldi2q3n70dgap7mn3cko1s5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.KabirTiwari.silversupportnew"
+              }
+            }
+          ]
         }
       }
     }

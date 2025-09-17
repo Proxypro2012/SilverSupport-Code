@@ -1,0 +1,62 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helpers
+    function isAuth() { return request.auth != null; }
+    function isAdmin() { return isAuth() && request.auth.token.admin == true; }
+    function isOwner(userId) { return isAuth() && request.auth.uid == userId; }
+    // Prevent clients from setting admin/privileged keys
+    function noAdminKeys() {
+      return !request.resource.data.keys().hasAny(['admin','isAdmin','role','claims','uid_admin']);
+    }
+
+    // Default: authenticated reads allowed, writes denied by default.
+    match /{document=**} {
+      allow read: if isAuth();
+      allow write: if false;
+    }
+
+    // Per-user profile documents
+    match /seniors/{userId} {
+      allow read: if isAuth();
+      allow create: if isOwner(userId)
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.name is string
+                    && request.resource.data.email is string
+                    && ( !request.resource.data.keys().hasAny(['createdAt']) || request.resource.data.createdAt is number )
+                    && noAdminKeys();
+      allow update: if isOwner(userId)
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.name is string
+                    && request.resource.data.email is string
+                    && noAdminKeys();
+      allow delete: if isOwner(userId);
+    }
+
+    match /students/{userId} {
+      allow read: if isAuth();
+      allow create: if isOwner(userId)
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.name is string
+                    && request.resource.data.email is string
+                    && (!request.resource.data.keys().hasAny(['userdata']) || (
+                         request.resource.data.userdata is map &&
+                         (!request.resource.data.userdata.keys().hasAny(['redeemable_volunteer_hours']) || request.resource.data.userdata.redeemable_volunteer_hours is number) &&
+                         (!request.resource.data.userdata.keys().hasAny(['current_tasks']) || request.resource.data.userdata.current_tasks is number)
+                       ))
+                    && noAdminKeys();
+      allow update: if isOwner(userId)
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.name is string
+                    && request.resource.data.email is string
+                    && noAdminKeys();
+      allow delete: if isOwner(userId);
+    }
+
+    // Admin-only writes for other documents
+    match /{document=**} {
+      allow write: if isAdmin();
+    }
+  }
+}

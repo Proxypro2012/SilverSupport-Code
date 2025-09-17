@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import '../models/task.dart';
 
@@ -158,6 +159,21 @@ class TaskService {
   }
 
   Future<void> markComplete({required String taskId}) async {
+    // Mark the task as completed in the database
     await _db.child(taskId).update({"status": "completed"});
+
+    // Fetch the task to get the assignedTo (student) UID
+    final snapshot = await _db.child(taskId).get();
+    if (!snapshot.exists) return;
+    final json = Map<String, dynamic>.from(snapshot.value as Map);
+    final assignedTo = json["assignedTo"];
+    if (assignedTo == null) return;
+
+    // Add the completed task to the student's userdata.completed_tasks in Firestore
+    final firestore = FirebaseFirestore.instance;
+    final studentDoc = firestore.collection("students").doc(assignedTo);
+    await studentDoc.update({
+      "userdata.completed_tasks": FieldValue.arrayUnion([taskId])
+    });
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import '../../services/auth_service.dart';
 
 class SeniorSignupScreen extends StatefulWidget {
@@ -14,6 +15,7 @@ class _SeniorSignupScreenState extends State<SeniorSignupScreen> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   final _authService = AuthService();
+  String? _phoneNumber; // Store full phone number with country code
   bool _loading = false;
 
   void _showMessage(String message) {
@@ -133,7 +135,25 @@ class _SeniorSignupScreenState extends State<SeniorSignupScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
+
+                  IntlPhoneField(
+                    decoration: InputDecoration(
+                      labelText: 'Phone Number',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 16,
+                      ),
+                    ),
+                    initialCountryCode: 'US',
+                    onChanged: (phone) {
+                      _phoneNumber = phone.completeNumber;
+                    },
+                  ),
+                  const SizedBox(height: 12),
 
                   _loading
                       ? const CircularProgressIndicator()
@@ -156,6 +176,15 @@ class _SeniorSignupScreenState extends State<SeniorSignupScreen> {
                                   password: _password.text,
                                   name: _name.text,
                                   role: "senior",
+                                  phoneNumber: _phoneNumber,
+                                  onCodeSent: (verificationId) {
+                                    _showMessage("SMS code sent. Please check your phone.");
+                                    final phone = _phoneNumber ?? '';
+                                    context.push('/verify-phone', extra: phone);
+                                  },
+                                  onError: (error) {
+                                    _showMessage(error);
+                                  },
                                 );
                                 _showMessage(
                                   "Account created! Please check your email for verification.",

@@ -24,8 +24,35 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.43842193930-gibkh9qfnldi2q3n70dgap7mn3cko1s5</string>
+			</array>
+		</dict>
+	</array>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<true/>
+
+	<!-- Local network privacy keys required on iOS when network access or Bonjour services are probed -->
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>This app requires access to the local network to complete phone verification and related functionality.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<!-- Add Bonjour service types here if your app advertises/discovers services, e.g. "_http._tcp." -->
+	</array>
+
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -33,6 +60,7 @@
 		<string>remote-notification</string>
 		<string>location</string>
 		<string>processing</string>
+		<string>fetch</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -51,11 +79,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-    <key>FirebaseAppDelegateProxyEnabled</key>
-    <true/>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-      <key>NSAllowsArbitraryLoads</key>
-      <true/>
-    </dict>
+</dict>
 </plist>
